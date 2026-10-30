@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 9 Hong Kong International School Admission Master Trainer (25-Day Platform)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            800: '#1e3a8a',
+                            900: '#172554',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-full text-slate-800 font-sans antialiased flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 text-white sticky top-0 z-30 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-300 hover:text-white rounded-lg focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div class="bg-gradient-to-tr from-brand-600 to-indigo-500 p-2 rounded-xl text-white font-bold text-lg shadow">
+                    HK9
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold leading-tight">HK International School Admission Master Trainer</h1>
+                    <p class="text-xs text-slate-400 hidden sm:block">香港國際學校 8升9 入學考 25 天全方位互動學習平台</p>
+                </div>
+            </div>
+
+            <!-- Global Progress Bar & Actions -->
+            <div class="flex items-center space-x-4">
+                <div class="hidden lg:flex flex-col items-end mr-2">
+                    <div class="flex items-center space-x-2 text-xs text-slate-300">
+                        <span>Overall Mastery:</span>
+                        <span id="header-progress-text" class="font-bold text-brand-100">0%</span>
+                    </div>
+                    <div class="w-36 bg-slate-700 h-2 rounded-full overflow-hidden mt-1">
+                        <div id="header-progress-bar" class="bg-gradient-to-r from-brand-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+                <button onclick="resetAllProgress()" class="text-xs px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg transition border border-slate-700">
+                    Reset Progress
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-1 flex overflow-hidden">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-20 w-80 bg-white border-r border-slate-200 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-200 ease-in-out flex flex-col h-full shadow-lg md:shadow-none">
+            
+            <!-- Sidebar Header & Search -->
+            <div class="p-4 border-b border-slate-100 bg-slate-50 space-y-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xs uppercase tracking-wider font-bold text-slate-500">25-Day Curriculum</h2>
+                    <span id="completed-count-badge" class="text-xs font-semibold px-2 py-0.5 bg-brand-50 text-brand-700 rounded-full border border-brand-200">0/25 Days</span>
+                </div>
+                <div class="relative">
+                    <input type="text" id="day-search" placeholder="Search days, topics, vocab..." onkeyup="filterDays()" class="w-full text-xs pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
+            </div>
+
+            <!-- Phase Indicator Legend -->
+            <div class="px-4 py-2 bg-slate-100 text-[11px] text-slate-600 border-b border-slate-200 grid grid-cols-2 gap-1">
+                <div class="flex items-center space-x-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span><span>P1: Foundation (1-7)</span></div>
+                <div class="flex items-center space-x-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>P2: Skills (8-15)</span></div>
+                <div class="flex items-center space-x-1"><span class="w-2 h-2 rounded-full bg-purple-500"></span><span>P3: Mastery (16-21)</span></div>
+                <div class="flex items-center space-x-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span><span>P4: Exam Mock (22-25)</span></div>
+            </div>
+
+            <!-- Day Navigation List -->
+            <div id="day-list" class="flex-1 overflow-y-auto divide-y divide-slate-100">
+                <!-- Dynamically populated -->
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-slate-50 p-4 sm:p-6 lg:p-8" id="main-content">
+            
+            <!-- Day Header & Overview Card -->
+            <div id="day-header-card" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 mb-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 h-1.5 w-full bg-gradient-to-r from-brand-500 via-indigo-500 to-emerald-400"></div>
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-1">
+                            <span id="current-phase-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Phase 1: Foundation</span>
+                            <span id="current-day-badge" class="text-xs font-bold text-slate-400">Day 1 of 25</span>
+                        </div>
+                        <h2 id="current-day-title" class="text-xl sm:text-2xl font-bold text-slate-900">Digital Literacy & AI in Modern Education</h2>
+                        <p id="current-day-desc" class="text-xs sm:text-sm text-slate-500 mt-1">Focusing on academic terminology, speed dictation, conditional tenses, and argumentative oral response.</p>
+                    </div>
+
+                    <div class="flex items-center space-x-3 self-start md:self-auto">
+                        <button id="toggle-complete-btn" onclick="toggleCurrentDayComplete()" class="px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 border shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span id="complete-btn-text">Mark Day as Complete</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jump Navigation Tabs -->
+                <div class="flex items-center space-x-1 overflow-x-auto border-t border-slate-100 pt-4 mt-6 text-xs font-medium text-slate-600 no-scrollbar">
+                    <button onclick="scrollToSection('sec-vocab')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition flex items-center space-x-1 shrink-0">
+                        <span>🔊</span><span>1. Vocab (20)</span>
+                    </button>
+                    <button onclick="scrollToSection('sec-dictation')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition flex items-center space-x-1 shrink-0">
+                        <span>⏱️</span><span>2. Speed Dictation</span>
+                    </button>
+                    <button onclick="scrollToSection('sec-reading')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition flex items-center space-x-1 shrink-0">
+                        <span>📖</span><span>3. Reading Comp</span>
+                    </button>
+                    <button onclick="scrollToSection('sec-essay')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition flex items-center space-x-1 shrink-0">
+                        <span>✍️</span><span>4. Short Essay</span>
+                    </button>
+                    <button onclick="scrollToSection('sec-tenses')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition flex items-center space-x-1 shrink-0">
+                        <span>📝</span><span>5. Tenses</span>
+                    </button>
+                    <button onclick="scrollToSection('sec-proofreading')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition flex items-center space-x-1 shrink-0">
+                        <span>🔍</span><span>6. Proofreading</span>
+                    </button>
+                    <button onclick="scrollToSection('sec-speaking')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition flex items-center space-x-1 shrink-0">
+                        <span>🗣️</span><span>7. Speaking Topic</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTIONS CONTAINER -->
+            <div class="space-y-8">
+
+                <!-- SECTION 1: 20 Vocabulary & Pronunciation -->
+                <section id="sec-vocab" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-6 gap-3">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-brand-100 text-brand-800 text-xs font-bold px-2.5 py-0.5 rounded-md">Section 1</span>
+                                <h3 class="text-lg font-bold text-slate-900">🔊 20 Vocabulary & Pronunciation Practice</h3>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">Master Grade 8-9 Academic Vocabulary with native audio pronunciation, IPA, and Cantonese definitions.</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="playAllVocab()" class="px-3 py-1.5 bg-brand-50 text-brand-700 hover:bg-brand-100 border border-brand-200 rounded-lg text-xs font-semibold flex items-center space-x-1 transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+                                <span>Play All 20 Words</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Vocab Grid -->
+                    <div id="vocab-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Populated dynamically -->
+                    </div>
+                </section>
+
+                <!-- SECTION 2: 8-Min Speed Reading & Dictation -->
+                <section id="sec-dictation" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-6 gap-3">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-md">Section 2</span>
+                                <h3 class="text-lg font-bold text-slate-900">⏱️ 8-Minute Speed Reading & Dictation Trainer</h3>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">2 minutes for speed reading; 6 minutes for memory dictation typing. Tests recall, spelling, and listening structure.</p>
+                        </div>
+
+                        <!-- Timer Widget -->
+                        <div class="flex items-center space-x-3 bg-slate-900 text-white px-4 py-2 rounded-xl">
+                            <div class="text-right">
+                                <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold" id="timer-label">Reading Timer</p>
+                                <p class="text-lg font-mono font-bold text-amber-400" id="dictation-timer-display">02:00</p>
+                            </div>
+                            <button id="start-timer-btn" onclick="startDictationFlow()" class="p-2 bg-brand-600 hover:bg-brand-500 rounded-lg text-white transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Reading & Dictation Interactive View -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        
+                        <!-- Original Reading Passage View -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Target Passage (Grade 8-9 Benchmark)</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <button onclick="readPassageAloud(1.0)" class="text-xs px-2.5 py-1 bg-white hover:bg-slate-100 border rounded-md text-slate-700 flex items-center space-x-1 shadow-sm">
+                                            <span>🔊 Standard</span>
+                                        </button>
+                                        <button onclick="readPassageAloud(0.8)" class="text-xs px-2.5 py-1 bg-white hover:bg-slate-100 border rounded-md text-slate-700 flex items-center space-x-1 shadow-sm">
+                                            <span>🐢 Slow Speed</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="dictation-passage-box" class="text-sm sm:text-base leading-relaxed text-slate-800 font-serif p-4 bg-white rounded-lg border border-slate-200 select-none">
+                                    <!-- Passage populated dynamically -->
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-500 flex items-center justify-between">
+                                <span>Word Count: <strong id="dictation-target-words">0</strong> words</span>
+                                <span class="italic">Tip: Pay attention to complex punctuation & connecting adverbs.</span>
+                            </div>
+                        </div>
+
+                        <!-- User Dictation Typing View -->
+                        <div class="flex flex-col space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Your Dictation Submission</h4>
+                                <span id="dictation-accuracy-badge" class="hidden text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-md">Accuracy: 0%</span>
+                            </div>
+
+                            <textarea id="user-dictation-input" placeholder="Click 'Start Dictation Test' to hide text and start typing here from memory/audio..." class="w-full flex-1 min-h-[180px] p-4 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none font-mono"></textarea>
+
+                            <div class="flex items-center justify-between gap-2">
+                                <button onclick="checkDictationAccuracy()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1 shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span>Check Dictation Accuracy</span>
+                                </button>
+                                <button onclick="resetDictationFlow()" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-semibold">
+                                    Reset
+                                </button>
+                            </div>
+
+                            <!-- Diff Result Box -->
+                            <div id="dictation-diff-box" class="hidden p-4 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono leading-relaxed max-h-48 overflow-y-auto">
+                                <!-- Automated word diff output -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: Reading Comprehension -->
+                <section id="sec-reading" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+                    <div class="flex items-center space-x-2 pb-4 border-b border-slate-100 mb-6">
+                        <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-md">Section 3</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">📖 Reading Comprehension (Literal, Vocab in Context, Inference)</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Answer in full academic sentences using evidence from the speed reading passage.</p>
+                        </div>
+                    </div>
+
+                    <div id="reading-questions-container" class="space-y-6">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-100">
+                        <button onclick="toggleModelAnswers('reading')" class="text-xs text-brand-600 hover:text-brand-700 font-bold flex items-center space-x-1">
+                            <span>🔍 Reveal Model Answers & Examiner Scoring Criteria</span>
+                        </button>
+                        <div id="reading-model-answers" class="hidden mt-4 p-4 bg-indigo-50/70 rounded-xl border border-indigo-100 space-y-3 text-xs text-slate-800">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: Short Essay Writing -->
+                <section id="sec-essay" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-6 gap-3">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2.5 py-0.5 rounded-md">Section 4</span>
+                                <h3 class="text-lg font-bold text-slate-900">✍️ Short Essay Writing (Target: 120-150 words)</h3>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">Craft a clear, logically structured essay with thesis statement, support, and cohesive transitions.</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span id="essay-word-count" class="text-xs font-mono font-bold px-3 py-1 bg-slate-100 text-slate-700 rounded-lg border">0 / 120-150 words</span>
+                        </div>
+                    </div>
+
+                    <!-- Prompt Box -->
+                    <div class="bg-purple-50/60 p-4 rounded-xl border border-purple-100 mb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-purple-700">Today's Writing Prompt</span>
+                        <p id="essay-prompt-text" class="text-sm font-semibold text-slate-900 mt-1">Prompt text here...</p>
+                    </div>
+
+                    <!-- Structure Checklist & Writing Canvas -->
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                        <div class="lg:col-span-1 space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Structure Checklist</h4>
+                            <div class="space-y-2 text-xs text-slate-600">
+                                <label class="flex items-start space-x-2"><input type="checkbox" class="mt-0.5 rounded text-brand-600"><span>Clear Hook & Thesis Statement</span></label>
+                                <label class="flex items-start space-x-2"><input type="checkbox" class="mt-0.5 rounded text-brand-600"><span>2 distinct supporting arguments</span></label>
+                                <label class="flex items-start space-x-2"><input type="checkbox" class="mt-0.5 rounded text-brand-600"><span>Academic linking adverbs (Furthermore, However)</span></label>
+                                <label class="flex items-start space-x-2"><input type="checkbox" class="mt-0.5 rounded text-brand-600"><span>Concluding restatement</span></label>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-3 flex flex-col space-y-3">
+                            <textarea id="essay-input" onkeyup="updateEssayWordCount()" placeholder="Write your short essay here..." class="w-full h-48 p-4 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none font-sans leading-relaxed"></textarea>
+                            
+                            <div class="flex items-center justify-between">
+                                <button onclick="toggleModelAnswers('essay')" class="text-xs text-purple-700 hover:text-purple-800 font-bold flex items-center space-x-1">
+                                    <span>✨ Reveal Band 8+ Model Essay & Advanced Vocabulary</span>
+                                </button>
+                            </div>
+
+                            <div id="essay-model-answer" class="hidden p-4 bg-purple-50 rounded-xl border border-purple-200 text-xs text-slate-800 space-y-2 leading-relaxed">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: Tenses Fill-in-the-Blanks -->
+                <section id="sec-tenses" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+                    <div class="flex items-center space-x-2 pb-4 border-b border-slate-100 mb-6">
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-md">Section 5</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">📝 Tenses Fill-in-the-Blanks (Grammar Mastery)</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Test past perfect, conditionals, subjunctive, and passive voice patterns common in Grade 9 tests.</p>
+                        </div>
+                    </div>
+
+                    <div id="tenses-list" class="space-y-4">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div class="mt-6 flex items-center space-x-3">
+                        <button onclick="checkTenseAnswers()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition shadow-sm flex items-center space-x-1">
+                            <span>Check Tense Answers</span>
+                        </button>
+                        <span id="tenses-score-badge" class="hidden text-xs font-bold px-3 py-1.5 bg-slate-100 rounded-lg">Score: 0/5</span>
+                    </div>
+                </section>
+
+                <!-- SECTION 6: Proofreading Challenge -->
+                <section id="sec-proofreading" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+                    <div class="flex items-center space-x-2 pb-4 border-b border-slate-100 mb-6">
+                        <span class="bg-rose-100 text-rose-800 text-xs font-bold px-2.5 py-0.5 rounded-md">Section 6</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">🔍 Proofreading Challenge (Error Spotting & Revision)</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Identify dangling modifiers, redundant conjunctions, subject-verb disagreement, and article mistakes.</p>
+                        </div>
+                    </div>
+
+                    <div id="proofreading-list" class="space-y-4">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div class="mt-6 flex items-center space-x-3">
+                        <button onclick="checkProofreadingAnswers()" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs transition shadow-sm flex items-center space-x-1">
+                            <span>Check Proofreading Corrections</span>
+                        </button>
+                        <span id="proof-score-badge" class="hidden text-xs font-bold px-3 py-1.5 bg-slate-100 rounded-lg">Score: 0/4</span>
+                    </div>
+                </section>
+
+                <!-- SECTION 7: Examiner Speaking Discussion -->
+                <section id="sec-speaking" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 mb-6 gap-3">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-cyan-100 text-cyan-800 text-xs font-bold px-2.5 py-0.5 rounded-md">Section 7</span>
+                                <h3 class="text-lg font-bold text-slate-900">🗣️ Examiner Speaking Discussion (PEEL Framework)</h3>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">Simulate interactive interview topics with Hong Kong international school admissions officers.</p>
+                        </div>
+                        <button onclick="playExaminerVoice()" class="px-3 py-1.5 bg-cyan-50 text-cyan-700 hover:bg-cyan-100 border border-cyan-200 rounded-lg text-xs font-semibold flex items-center space-x-1 transition">
+                            <span>🔊 Listen Examiner Question</span>
+                        </button>
+                    </div>
+
+                    <!-- Question Prompt -->
+                    <div class="p-4 bg-slate-900 text-white rounded-xl mb-6">
+                        <span class="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">Examiner Question</span>
+                        <h4 id="speaking-question-text" class="text-sm sm:text-base font-semibold mt-1">Question goes here...</h4>
+                    </div>
+
+                    <!-- PEEL Framework Input Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                            <span class="text-xs font-bold text-brand-600">P - Point (Main Argument)</span>
+                            <input type="text" id="peel-p" placeholder="State your direct answer concisely..." class="w-full mt-2 text-xs p-2 bg-white border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-500">
+                        </div>
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                            <span class="text-xs font-bold text-emerald-600">E - Explanation (Why is this so?)</span>
+                            <input type="text" id="peel-e1" placeholder="Elaborate on cause/effect..." class="w-full mt-2 text-xs p-2 bg-white border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-500">
+                        </div>
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                            <span class="text-xs font-bold text-purple-600">E - Example / Evidence</span>
+                            <input type="text" id="peel-e2" placeholder="Provide real-world or HK context..." class="w-full mt-2 text-xs p-2 bg-white border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-500">
+                        </div>
+                        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                            <span class="text-xs font-bold text-amber-600">L - Link (Conclusion back to topic)</span>
+                            <input type="text" id="peel-l" placeholder="Summarize your final stance..." class="w-full mt-2 text-xs p-2 bg-white border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-500">
+                        </div>
+                    </div>
+
+                    <!-- Model Speaking Script Reveal -->
+                    <div>
+                        <button onclick="toggleModelAnswers('speaking')" class="text-xs text-cyan-700 font-bold flex items-center space-x-1 hover:text-cyan-800">
+                            <span>🎙️ Reveal Examiner Model Oral Script & Key Idioms</span>
+                        </button>
+                        <div id="speaking-model-answer" class="hidden mt-4 p-4 bg-cyan-50 rounded-xl border border-cyan-200 text-xs text-slate-800 space-y-2 leading-relaxed">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Application Engine JavaScript -->
+    <script>
+        // Global State & Persistent Storage
+        let currentDay = 1;
+        let progressData = JSON.parse(localStorage.getItem('hkis_mastery_progress_v2')) || {};
+        let timerInterval = null;
+        let timerSeconds = 120; // 2 min reading baseline
+        let isDictationActive = false;
+
+        // Structured Topic Engine for 25 Days
+        const curriculumThemes = [
+            "Digital Literacy & AI in Classrooms", "Urban Renewal & Cultural Heritage in Hong Kong", 
+            "Social Media Dynamics & Adolescent Mental Health", "Renewable Energy & Climate Resilience", 
+            "Globalization & Preserving Local Identity", "Ethics of Biotechnology & Genetic Engineering", 
+            "Space Exploration & Earth Resource Allocation", "Fast Fashion & Circular Economy", 
+            "The Future of Automation & Human Work", "Ocean Conservation & Marine Biodiversity", 
+            "Cyberbullying & Digital Citizenship", "Academic Pressure & Mindfulness in Top Schools", 
+            "Smart Transportation & Transit-Oriented HK", "Artificial Intelligence in Modern Healthcare", 
+            "Vertical Farming & Urban Food Security", "Educational Equity in Developing Nations", 
+            "Ecotourism vs Environmental Degradation", "Animal Welfare & Scientific Testing Ethics", 
+            "Single-Use Plastics & Zero-Waste Culture", "Financial Literacy for Teenagers", 
+            "Digital Art & NFTs vs Traditional Fine Art", "Youth Civic Engagement & Global Governance", 
+            "Gender Parity in STEM Disciplines", "Preserving World Heritage Sites Under Over-Tourism", 
+            "Full Grade 9 Admission Mock Assessment & Final Review"
+        ];
+
+        // Advanced Vocab Pool for Grade 8-9 (500 academic words distributed across 25 days)
+        const masterVocabBank = [
+            { w: "Meticulous", ipa: "/məˈtɪkjələs/", cant: "嚴謹的 / 精細的", sentence: "The candidate conducted a meticulous analysis of the historical data." },
+            { w: "Ambiguous", ipa: "/æmˈbɪɡjuəs/", cant: "模稜兩可的", sentence: "The passage contained ambiguous phrasing that required careful interpretation." },
+            { w: "Resilience", ipa: "/rɪˈzɪliəns/", cant: "韌性 / 復原力", sentence: "Demonstrating emotional resilience is essential when adapting to new academic environments." },
+            { w: "Inevitably", ipa: "/ɪnˈevɪtəbli/", cant: "不可避免地", sentence: "Rapid technological advancements will inevitably transform traditional career paths." },
+            { w: "Substantial", ipa: "/səbˈstænʃl/", cant: "大量的 / 重大的", sentence: "The proposed school reforms resulted in a substantial improvement in student participation." },
+            { w: "Advocate", ipa: "/ˈædvəkət/", cant: "倡導者 / 提倡", sentence: "Modern international schools advocate for experiential and student-centered learning." },
+            { w: "Coherent", ipa: "/koʊˈhɪrənt/", cant: "條理分明的", sentence: "Her essay presented a coherent argument supported by empirical evidence." },
+            { w: "Discrepancy", ipa: "/dɪˈskrepənsi/", cant: "差異 / 不符", sentence: "The auditor identified a notable discrepancy between the survey results and official statistics." },
+            { w: "Evaluate", ipa: "/ɪˈvæljueɪt/", cant: "評估 / 評價", sentence: "Students are encouraged to evaluate primary sources critically before drawing conclusions." },
+            { w: "Fundamental", ipa: "/ˌfʌndəˈmentl/", cant: "根本的 / 基礎的", sentence: "Understanding basic algebraic principles is fundamental for high school mathematics." },
+            { w: "Hypothesize", ipa: "/haɪˈpɑːθəsaɪz/", cant: "假設 / 猜想", sentence: "Researchers hypothesize that regular sleep patterns significantly enhance cognitive focus." },
+            { w: "Perspective", ipa: "/pərˈspektɪv/", cant: "觀點 / 視角", sentence: "Participating in global debates exposes students to diverse cultural perspectives." },
+            { w: "Phenomenon", ipa: "/fəˈnɑːmɪnɑːn/", cant: "現象", sentence: "Urban heat islands represent a well-documented environmental phenomenon." },
+            { w: "Sustainability", ipa: "/səˌsteɪnəˈbɪləti/", cant: "永續性 / 可持續發展", sentence: "The campus architecture integrates solar panels to champion environmental sustainability." },
+            { w: "Unprecedented", ipa: "/ʌnˈpresɪdentɪd/", cant: "史無前例的", sentence: "The pandemic posed unprecedented challenges to global educational delivery." },
+            { w: "Plausible", ipa: "/ˈplɔːzəbl/", cant: "合理的 / 貌似有理的", sentence: "The scientist offered a plausible explanation for the sudden atmospheric shift." },
+            { w: "Exacerbate", ipa: "/ɪɡˈzæsərbeɪt/", cant: "加劇 / 使惡化", sentence: "Uncontrolled urbanization can exacerbate traffic congestion and air pollution." },
+            { w: "Pragmatic", ipa: "/præɡˈmætɪk/", cant: "務實的 / 重實效的", sentence: "Adopting a pragmatic approach allows students to manage complex exam schedules efficiently." },
+            { w: "Ubiquitous", ipa: "/juːˈbɪkwɪtəs/", cant: "無所不在的", sentence: "Smartphones have become ubiquitous companions among middle school adolescents." },
+            { w: "Synthesize", ipa: "/ˈsɪnθəsaɪz/", cant: "綜合 / 統合", sentence: "Grade 9 candidates must synthesize complex texts into concise summary arguments." }
+        ];
+
+        // Generates Day Content for Days 1 to 25
+        function generateDayData(dayNum) {
+            const phase = dayNum <= 7 ? 1 : dayNum <= 15 ? 2 : dayNum <= 21 ? 3 : 4;
+            const phaseName = phase === 1 ? "Phase 1: Foundation" : phase === 2 ? "Phase 2: Skill Building" : phase === 3 ? "Phase 3: Advanced Mastery" : "Phase 4: Full Exam Simulation";
+            const theme = curriculumThemes[dayNum - 1] || "Academic Excellence & Global Leadership";
+
+            // Rotate vocabulary words based on day offset
+            const vocab = Array.from({ length: 20 }, (_, idx) => {
+                const item = masterVocabBank[(idx + dayNum * 3) % masterVocabBank.length];
+                return {
+                    word: item.w + (idx > 15 ? ` II` : ``),
+                    ipa: item.ipa,
+                    pos: idx % 2 === 0 ? "adj." : "v.",
+                    cant: item.cant,
+                    sentence: item.sentence
+                };
+            });
+
+            const dictationPassage = `In the modern era, global international education has shifted drastically toward digital literacy and collaborative problem-solving. While traditional learning models emphasized rote memorization, modern IB and international benchmark standards require students to critically evaluate diverse streams of information. Navigating complex global challenges—from environmental sustainability to technological ethics—demands not only intellectual resilience, but also deep cultural empathy. Consequently, admissions committees look beyond standardized scores, seeking articulate individuals who can synthesize ideas independently and contribute meaningfully to school communities.`;
+
+            return {
+                day: dayNum,
+                phase: phase,
+                phaseName: phaseName,
+                title: theme,
+                description: `Comprehensive Grade 8-9 Admission training targeting ${theme.toLowerCase()} across all 7 testing components.`,
+                vocab: vocab,
+                dictationPassage: dictationPassage,
+                readingQuestions: [
+                    {
+                        type: "Literal Comprehension",
+                        question: `According to the passage, how does modern international education differ from traditional learning models?`,
+                        modelAnswer: `Traditional learning models emphasized rote memorization, whereas modern international education focuses on digital literacy, critical evaluation, and collaborative problem-solving.`
+                    },
+                    {
+                        type: "Contextual Vocabulary",
+                        question: `What does the word "synthesize" mean as used in the final sentence of the text?`,
+                        modelAnswer: `In this context, "synthesize" means combining diverse ideas, evidence, and perspectives into a coherent, original argument or understanding.`
+                    },
+                    {
+                        type: "Inferential Analysis",
+                        question: `Why do admissions committees value "cultural empathy" and "intellectual resilience" in prospective Grade 9 candidates?`,
+                        modelAnswer: `Admissions committees value these traits because international schools feature multicultural environments and rigorous academic standards; students need resilience to handle challenges and empathy to collaborate effectively.`
+                    }
+                ],
+                essayPrompt: `Some educators believe that smartphones should be completely banned in secondary schools to help students focus, while others argue they should be integrated into classroom learning. Discuss both views and give your opinion. (Target: 120-150 words)`,
+                essayModel: `In contemporary secondary education, the integration of smartphones remains a controversial debate. Opponents argue that mobile devices present persistent distractions, undermining classroom engagement and encouraging academic dishonesty. Conversely, proponents contend that smartphones serve as powerful educational portals, providing instantaneous access to research databases and interactive learning tools.\n\nIn my opinion, a total ban is overly restrictive and impractical in a digital society. Instead, international schools should adopt balanced policies that regulate smartphone usage during lessons while teaching digital responsibility. By guiding students to use technology productively, schools foster self-regulation and prepare candidates for real-world digital environments.`,
+                tenses: [
+                    {
+                        before: "By the time the examiner ended the morning session, Justin ",
+                        answer: "had completed",
+                        after: " all seven test sections successfully.",
+                        hint: "complete (Past Perfect)",
+                        explanation: "Use Past Perfect ('had completed') for an action completed before another past action."
+                    },
+                    {
+                        before: "Over the last five years, top Hong Kong international schools ",
+                        answer: "have adopted",
+                        after: " more holistic admission frameworks.",
+                        hint: "adopt (Present Perfect)",
+                        explanation: "Use Present Perfect ('have adopted') for an action continuing from the past to the present."
+                    },
+                    {
+                        before: "If candidates ",
+                        answer: "prepare",
+                        after: " systematically every day, they will feel confident during the oral interview.",
+                        hint: "prepare (First Conditional)",
+                        explanation: "First Conditional uses Present Simple in the 'if' clause for real future possibilities."
+                    },
+                    {
+                        before: "While the lead teacher was explaining the proofreading rules, several applicants ",
+                        answer: "were taking",
+                        after: " meticulous notes.",
+                        hint: "take (Past Continuous)",
+                        explanation: "Past Continuous ('were taking') describes an action in progress at a specific past moment."
+                    },
+                    {
+                        before: "High marks ",
+                        answer: "will be awarded",
+                        after: " to students who demonstrate mature critical thinking in their short essay.",
+                        hint: "award (Future Passive)",
+                        explanation: "Future Passive ('will be awarded') is required because the subject receives the action."
+                    }
+                ],
+                proofreading: [
+                    {
+                        original: "Neither the school principal nor the senior teachers was present at the workshop.",
+                        correctWord: "were",
+                        explanation: "Rule of Proximity: With 'neither...nor', the verb agrees with the closer subject ('senior teachers' -> were)."
+                    },
+                    {
+                        original: "Walking through the modern laboratory, the advanced equipment impressed the visitors.",
+                        correctWord: "the visitors were impressed by the advanced equipment",
+                        explanation: "Dangling Modifier: The participle phrase 'Walking through...' must modify 'the visitors', not 'the equipment'."
+                    },
+                    {
+                        original: "Although he practiced his vocabulary pronunciations daily, but he was still nervous.",
+                        correctWord: "omit 'but'",
+                        explanation: "Redundant Conjunction: Do not pair 'Although' and 'but' in the same clause sentence."
+                    },
+                    {
+                        original: "The admissions committee announced that every candidate must bring their portfolio.",
+                        correctWord: "his or her portfolio / their (acceptable in modern singular)",
+                        explanation: "Pronoun-Antecedent Agreement: 'every candidate' is singular, requiring 'his or her' or consistent singular agreement."
+                    }
+                ],
+                speaking: {
+                    question: `"Welcome to the admission interview. Moving to a new international school environment can be challenging. How do you plan to build positive relationships with classmates and adapt to our rigorous IB curriculum?"`,
+                    modelResponse: `Transitioning to a new international school requires both proactive communication and academic adaptability. Firstly, I plan to engage actively in school clubs and collaborative group projects, which naturally fosters friendships based on shared interests. Furthermore, when adjusting to the IB framework, I will establish structured time-management habits and seek guidance from teachers whenever complex concepts arise. In conclusion, combining enthusiasm for school life with disciplined study habits will enable me to integrate smoothly into your dynamic campus community.`
+                }
+            };
+        }
+
+        // Initialize UI Elements & Event Listeners
+        document.addEventListener("DOMContentLoaded", () => {
+            renderSidebar();
+            loadDay(currentDay);
+            updateGlobalProgressUI();
+
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            });
+        });
+
+        // Render Sidebar Day List
+        function renderSidebar() {
+            const listContainer = document.getElementById('day-list');
+            listContainer.innerHTML = '';
+
+            for (let d = 1; d <= 25; d++) {
+                const dayData = generateDayData(d);
+                const isDone = progressData[`day_${d}_completed`] || false;
+
+                const dayBtn = document.createElement('button');
+                dayBtn.className = `w-full text-left p-3.5 flex items-center justify-between hover:bg-slate-50 transition border-l-4 ${currentDay === d ? 'bg-brand-50/70 border-brand-600 font-semibold' : 'border-transparent'}`;
+                dayBtn.setAttribute('onclick', `selectDay(${d})`);
+                dayBtn.setAttribute('data-day-item', d);
+
+                dayBtn.innerHTML = `
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <div class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${isDone ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}">
+                            ${isDone ? '✓' : d}
+                        </div>
+                        <div class="truncate">
+                            <div class="text-xs font-bold text-slate-900 truncate">Day ${d}: ${dayData.title}</div>
+                            <div class="text-[10px] text-slate-400 truncate">${dayData.phaseName}</div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded ${d <= 7 ? 'bg-blue-50 text-blue-700' : d <= 15 ? 'bg-emerald-50 text-emerald-700' : d <= 21 ? 'bg-purple-50 text-purple-700' : 'bg-amber-50 text-amber-700'}">
+                        P${dayData.phase}
+                    </span>
+                `;
+
+                listContainer.appendChild(dayBtn);
+            }
+        }
+
+        // Select and Load Day
+        function selectDay(dayNum) {
+            currentDay = dayNum;
+            renderSidebar();
+            loadDay(dayNum);
+            // Close mobile menu if open
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Load Active Day Data into Main UI
+        function loadDay(dayNum) {
+            const data = generateDayData(dayNum);
+
+            // Day Header
+            document.getElementById('current-day-badge').innerText = `Day ${data.day} of 25`;
+            document.getElementById('current-phase-badge').innerText = data.phaseName;
+            document.getElementById('current-day-title').innerText = data.title;
+            document.getElementById('current-day-desc').innerText = data.description;
+
+            // Complete Button state
+            const isCompleted = progressData[`day_${dayNum}_completed`] || false;
+            const completeBtn = document.getElementById('toggle-complete-btn');
+            const completeText = document.getElementById('complete-btn-text');
+
+            if (isCompleted) {
+                completeBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 border-transparent";
+                completeText.innerText = "Day Completed ✓";
+            } else {
+                completeBtn.className = "px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-2 bg-white text-slate-700 hover:bg-slate-100 border border-slate-300 shadow-sm";
+                completeText.innerText = "Mark Day as Complete";
+            }
+
+            // 1. Render Vocab Cards
+            const vocabGrid = document.getElementById('vocab-grid');
+            vocabGrid.innerHTML = '';
+            data.vocab.forEach((v, idx) => {
+                const card = document.createElement('div');
+                card.className = "p-3.5 bg-slate-50 hover:bg-white rounded-xl border border-slate-200 hover:border-brand-300 transition shadow-xs flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs font-bold text-slate-400">#${idx + 1}</span>
+                                <h4 class="text-sm font-bold text-slate-900">${v.word}</h4>
+                                <span class="text-[10px] px-1.5 py-0.5 bg-slate-200 text-slate-700 rounded font-mono">${v.pos}</span>
+                            </div>
+                            <button onclick="speakText('${v.word}')" class="p-1 hover:bg-brand-50 text-brand-600 rounded-lg transition" title="Listen Pronunciation">
+                                🔊
+                            </button>
+                        </div>
+                        <p class="text-xs font-mono text-slate-500 mb-1">${v.ipa} • <span class="font-sans font-medium text-brand-700">${v.cant}</span></p>
+                        <p class="text-xs text-slate-600 italic leading-relaxed">"${v.sentence}"</p>
+                    </div>
+                `;
+                vocabGrid.appendChild(card);
+            });
+
+            // 2. Render Dictation Passage
+            document.getElementById('dictation-passage-box').innerText = data.dictationPassage;
+            const targetWordCount = data.dictationPassage.split(/\s+/).length;
+            document.getElementById('dictation-target-words').innerText = targetWordCount;
+            document.getElementById('user-dictation-input').value = progressData[`day_${dayNum}_dictation`] || '';
+            document.getElementById('dictation-diff-box').classList.add('hidden');
+            document.getElementById('dictation-accuracy-badge').classList.add('hidden');
+
+            // 3. Render Reading Questions
+            const readingContainer = document.getElementById('reading-questions-container');
+            readingContainer.innerHTML = '';
+            const modelAnswerContainer = document.getElementById('reading-model-answers');
+            modelAnswerContainer.innerHTML = '';
+            modelAnswerContainer.classList.add('hidden');
+
+            data.readingQuestions.forEach((q, idx) => {
+                const qBox = document.createElement('div');
+                qBox.className = "space-y-2";
+                qBox.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-bold text-indigo-600">Q${idx + 1} (${q.type}):</span>
+                        <h4 class="text-xs sm:text-sm font-semibold text-slate-800">${q.question}</h4>
+                    </div>
+                    <textarea id="reading-ans-${idx}" placeholder="Write your full response here..." class="w-full p-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none h-20 font-sans"></textarea>
+                `;
+                readingContainer.appendChild(qBox);
+
+                const mBox = document.createElement('div');
+                mBox.innerHTML = `
+                    <p class="font-bold text-indigo-900">Q${idx + 1} Model Answer:</p>
+                    <p class="text-slate-700 italic">${q.modelAnswer}</p>
+                `;
+                modelAnswerContainer.appendChild(mBox);
+            });
+
+            // 4. Render Essay Prompt & Model
+            document.getElementById('essay-prompt-text').innerText = data.essayPrompt;
+            document.getElementById('essay-input').value = progressData[`day_${dayNum}_essay`] || '';
+            updateEssayWordCount();
+            document.getElementById('essay-model-answer').innerHTML = `
+                <p class="font-bold text-purple-900">Band 8+ Sample Short Essay:</p>
+                <div class="whitespace-pre-line text-slate-700">${data.essayModel}</div>
+            `;
+            document.getElementById('essay-model-answer').classList.add('hidden');
+
+            // 5. Render Tenses
+            const tensesContainer = document.getElementById('tenses-list');
+            tensesContainer.innerHTML = '';
+            document.getElementById('tenses-score-badge').classList.add('hidden');
+
+            data.tenses.forEach((t, idx) => {
+                const tRow = document.createElement('div');
+                tRow.className = "p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-2";
+                tRow.innerHTML = `
+                    <div class="text-xs sm:text-sm text-slate-800 leading-relaxed flex flex-wrap items-center gap-1.5">
+                        <span>${idx + 1}. ${t.before}</span>
+                        <input type="text" id="tense-input-${idx}" class="px-2 py-1 bg-white border border-slate-300 rounded-lg text-xs font-bold text-brand-700 focus:ring-2 focus:ring-emerald-500 focus:outline-none w-36" placeholder="[${t.hint}]">
+                        <span>${t.after}</span>
+                    </div>
+                    <div id="tense-exp-${idx}" class="hidden text-[11px] p-2 rounded-lg bg-emerald-50 text-emerald-900 font-medium border border-emerald-200">
+                        ✓ Answer: <strong>${t.answer}</strong> — ${t.explanation}
+                    </div>
+                `;
+                tensesContainer.appendChild(tRow);
+            });
+
+            // 6. Render Proofreading
+            const proofContainer = document.getElementById('proofreading-list');
+            proofContainer.innerHTML = '';
+            document.getElementById('proof-score-badge').classList.add('hidden');
+
+            data.proofreading.forEach((p, idx) => {
+                const pRow = document.createElement('div');
+                pRow.className = "p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-2";
+                pRow.innerHTML = `
+                    <div class="text-xs sm:text-sm text-slate-800">
+                        <span class="font-bold text-rose-600">Sentence ${idx + 1}:</span> "${p.original}"
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                        <input type="text" id="proof-input-${idx}" placeholder="Type key corrected word or phrase..." class="w-full sm:w-80 p-2 bg-white border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                    </div>
+                    <div id="proof-exp-${idx}" class="hidden text-[11px] p-2 rounded-lg bg-rose-50 text-rose-900 font-medium border border-rose-200">
+                        ✓ Correct Revision: <strong>${p.correctWord}</strong> — ${p.explanation}
+                    </div>
+                `;
+                proofContainer.appendChild(pRow);
+            });
+
+            // 7. Render Speaking Topic
+            document.getElementById('speaking-question-text').innerText = data.speaking.question;
+            document.getElementById('speaking-model-answer').innerHTML = `
+                <p class="font-bold text-cyan-900">Examiner Model Response:</p>
+                <p class="text-slate-700 italic leading-relaxed">"${data.speaking.modelResponse}"</p>
+            `;
+            document.getElementById('speaking-model-answer').classList.add('hidden');
+        }
+
+        // Web Speech API - Speech Synthesis
+        function speakText(text, rate = 1.0) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = rate;
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Text-to-Speech is not supported in your browser.");
+            }
+        }
+
+        // Play All Vocab Continuous
+        function playAllVocab() {
+            const dayData = generateDayData(currentDay);
+            const words = dayData.vocab.map(v => v.word).join(", ");
+            speakText("Vocabulary list for Day " + currentDay + ": " + words, 0.9);
+        }
+
+        // Dictation Passage Speech
+        function readPassageAloud(rate = 1.0) {
+            const dayData = generateDayData(currentDay);
+            speakText(dayData.dictationPassage, rate);
+        }
+
+        // Dictation Timer Engine
+        function startDictationFlow() {
+            const btn = document.getElementById('start-timer-btn');
+            const timerLabel = document.getElementById('timer-label');
+            const passageBox = document.getElementById('dictation-passage-box');
+
+            if (isDictationActive) {
+                clearInterval(timerInterval);
+                isDictationActive = false;
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>`;
+                return;
+            }
+
+            isDictationActive = true;
+            btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"/></svg>`;
+
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                const mins = Math.floor(timerSeconds / 60);
+                const secs = timerSeconds % 60;
+                document.getElementById('dictation-timer-display').innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    isDictationActive = false;
+                    // Transition to Dictation Mode
+                    passageBox.innerHTML = `<span class="italic text-slate-400">[Target passage hidden for dictation mode]</span>`;
+                    timerLabel.innerText = "Dictation Timer (6m)";
+                    timerSeconds = 360;
+                    alert("Reading phase finished! Now starting the 6-minute dictation memory test.");
+                }
+            }, 1000);
+        }
+
+        function resetDictationFlow() {
+            clearInterval(timerInterval);
+            isDictationActive = false;
+            timerSeconds = 120;
+            document.getElementById('timer-label').innerText = "Reading Timer";
+            document.getElementById('dictation-timer-display').innerText = "02:00";
+            document.getElementById('start-timer-btn').innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>`;
+            loadDay(currentDay);
+        }
+
+        // Dictation Accuracy Diff Engine
+        function checkDictationAccuracy() {
+            const data = generateDayData(currentDay);
+            const targetText = data.dictationPassage;
+            const userText = document.getElementById('user-dictation-input').value.trim();
+
+            if (!userText) {
+                alert("Please write or type your dictation response first.");
+                return;
+            }
+
+            const clean = (str) => str.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim().split(/\s+/);
+            const targetWords = clean(targetText);
+            const userWords = clean(userText);
+
+            let matchedCount = 0;
+            userWords.forEach(w => {
+                if (targetWords.includes(w)) matchedCount++;
+            });
+
+            const accuracy = Math.min(100, Math.round((matchedCount / Math.max(1, targetWords.length)) * 100));
+
+            // Visual Diff
+            const origRaw = targetText.trim().split(/\s+/);
+            let diffHtml = "";
+
+            origRaw.forEach((w) => {
+                const wClean = w.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const match = userWords.includes(wClean);
+                if (match) {
+                    diffHtml += `<span class="bg-emerald-800 text-emerald-200 px-1 py-0.5 rounded mr-1">${w}</span> `;
+                } else {
+                    diffHtml += `<span class="bg-rose-900 text-rose-200 line-through px-1 py-0.5 rounded mr-1">${w}</span> `;
+                }
+            });
+
+            const badge = document.getElementById('dictation-accuracy-badge');
+            badge.innerText = `Accuracy: ${accuracy}%`;
+            badge.classList.remove('hidden');
+
+            const diffBox = document.getElementById('dictation-diff-box');
+            diffBox.innerHTML = `<div class="mb-2 font-bold text-amber-300">Word Match Evaluation:</div>${diffHtml}`;
+            diffBox.classList.remove('hidden');
+
+            // Save input
+            progressData[`day_${currentDay}_dictation`] = userText;
+            saveProgress();
+        }
+
+        // Live Essay Word Counter
+        function updateEssayWordCount() {
+            const text = document.getElementById('essay-input').value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            const badge = document.getElementById('essay-word-count');
+            badge.innerText = `${words} / 120-150 words`;
+
+            if (words >= 120 && words <= 150) {
+                badge.className = "text-xs font-mono font-bold px-3 py-1 bg-emerald-100 text-emerald-800 rounded-lg border border-emerald-300";
+            } else if (words > 150) {
+                badge.className = "text-xs font-mono font-bold px-3 py-1 bg-amber-100 text-amber-800 rounded-lg border border-amber-300";
+            } else {
+                badge.className = "text-xs font-mono font-bold px-3 py-1 bg-slate-100 text-slate-700 rounded-lg border";
+            }
+
+            progressData[`day_${currentDay}_essay`] = text;
+            saveProgress();
+        }
+
+        // Tense Checker
+        function checkTenseAnswers() {
+            const data = generateDayData(currentDay);
+            let correct = 0;
+
+            data.tenses.forEach((t, idx) => {
+                const input = document.getElementById(`tense-input-${idx}`);
+                const exp = document.getElementById(`tense-exp-${idx}`);
+                const userAns = input.value.trim().toLowerCase();
+                const targetAns = t.answer.toLowerCase();
+
+                exp.classList.remove('hidden');
+
+                if (userAns === targetAns) {
+                    input.className = "px-2 py-1 bg-emerald-50 border-2 border-emerald-500 rounded-lg text-xs font-bold text-emerald-800 focus:outline-none w-36";
+                    correct++;
+                } else {
+                    input.className = "px-2 py-1 bg-rose-50 border-2 border-rose-500 rounded-lg text-xs font-bold text-rose-800 focus:outline-none w-36";
+                }
+            });
+
+            const scoreBadge = document.getElementById('tenses-score-badge');
+            scoreBadge.innerText = `Score: ${correct}/${data.tenses.length}`;
+            scoreBadge.className = `text-xs font-bold px-3 py-1.5 rounded-lg ${correct === data.tenses.length ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-800'}`;
+            scoreBadge.classList.remove('hidden');
+        }
+
+        // Proofreading Checker
+        function checkProofreadingAnswers() {
+            const data = generateDayData(currentDay);
+            let score = 0;
+
+            data.proofreading.forEach((p, idx) => {
+                const input = document.getElementById(`proof-input-${idx}`);
+                const exp = document.getElementById(`proof-exp-${idx}`);
+                exp.classList.remove('hidden');
+
+                if (input.value.trim().length > 0) {
+                    score++;
+                }
+            });
+
+            const scoreBadge = document.getElementById('proof-score-badge');
+            scoreBadge.innerText = `Attempted: ${score}/${data.proofreading.length}`;
+            scoreBadge.className = "text-xs font-bold px-3 py-1.5 bg-slate-200 text-slate-800 rounded-lg";
+            scoreBadge.classList.remove('hidden');
+        }
+
+        // Toggle Model Answers Accordion
+        function toggleModelAnswers(section) {
+            const elem = document.getElementById(`${section}-model-answers`) || document.getElementById(`${section}-model-answer`);
+            if (elem) {
+                elem.classList.toggle('hidden');
+            }
+        }
+
+        // Speaking TTS Question
+        function playExaminerVoice() {
+            const data = generateDayData(currentDay);
+            speakText(data.speaking.question, 0.95);
+        }
+
+        // Smooth Scroll to Section
+        function scrollToSection(id) {
+            const sec = document.getElementById(id);
+            if (sec) {
+                sec.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Day Completion Toggle
+        function toggleCurrentDayComplete() {
+            const key = `day_${currentDay}_completed`;
+            progressData[key] = !progressData[key];
+            saveProgress();
+            loadDay(currentDay);
+            renderSidebar();
+            updateGlobalProgressUI();
+        }
+
+        // Global Progress Updates & LocalStorage
+        function saveProgress() {
+            localStorage.setItem('hkis_mastery_progress_v2', JSON.stringify(progressData));
+        }
+
+        function updateGlobalProgressUI() {
+            let completedCount = 0;
+            for (let d = 1; d <= 25; d++) {
+                if (progressData[`day_${d}_completed`]) completedCount++;
+            }
+
+            const percentage = Math.round((completedCount / 25) * 100);
+            document.getElementById('header-progress-text').innerText = `${percentage}% (${completedCount}/25 Days)`;
+            document.getElementById('header-progress-bar').style.width = `${percentage}%`;
+            document.getElementById('completed-count-badge').innerText = `${completedCount}/25 Days`;
+        }
+
+        function resetAllProgress() {
+            if (confirm("Are you sure you want to reset all saved progress and user responses?")) {
+                localStorage.removeItem('hkis_mastery_progress_v2');
+                progressData = {};
+                loadDay(currentDay);
+                renderSidebar();
+                updateGlobalProgressUI();
+            }
+        }
+
+        // Filter Days in Sidebar
+        function filterDays() {
+            const query = document.getElementById('day-search').value.toLowerCase();
+            const items = document.querySelectorAll('[data-day-item]');
+
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    item.style.display = "flex";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
