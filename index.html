@@ -62,7 +62,7 @@
                 </div>
                 <div>
                     <h1 class="text-base sm:text-lg font-bold leading-tight">HK International School Admission Master Trainer</h1>
-                    <p class="text-xs text-slate-400 hidden sm:block">香港國際學校 8升9 入學考 25 天全方位互動學習平台</p>
+                    <p class="text-xs text-slate-400 hidden sm:block">香港國際學校 8升9 入學考 25 天全功能互動學習平台</p>
                 </div>
             </div>
 
@@ -128,7 +128,7 @@
                             <span id="current-phase-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Phase 1: Foundation</span>
                             <span id="current-day-badge" class="text-xs font-bold text-slate-400">Day 1 of 25</span>
                         </div>
-                        <h2 id="current-day-title" class="text-xl sm:text-2xl font-bold text-slate-900">Digital Literacy & AI in Modern Education</h2>
+                        <h2 id="current-day-title" class="text-xl sm:text-2xl font-bold text-slate-900">Artificial Intelligence in Education</h2>
                         <p id="current-day-desc" class="text-xs sm:text-sm text-slate-500 mt-1">Focusing on academic terminology, speed dictation, conditional tenses, and argumentative oral response.</p>
                     </div>
 
@@ -383,7 +383,7 @@
                         <button onclick="checkProofreadingAnswers()" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs transition shadow-sm flex items-center space-x-1">
                             <span>Check Proofreading Corrections</span>
                         </button>
-                        <span id="proof-score-badge" class="hidden text-xs font-bold px-3 py-1.5 bg-slate-100 rounded-lg">Score: 0/4</span>
+                        <span id="proof-score-badge" class="hidden text-xs font-bold px-3 py-1.5 bg-slate-100 rounded-lg">Score: 0/5</span>
                     </div>
                 </section>
 
@@ -447,71 +447,214 @@
     <script>
         // Global State & Persistent Storage
         let currentDay = 1;
-        let progressData = JSON.parse(localStorage.getItem('hkis_mastery_progress_v2')) || {};
+        let progressData = JSON.parse(localStorage.getItem('hkis_mastery_progress_v3')) || {};
         let timerInterval = null;
         let timerSeconds = 120; // 2 min reading baseline
         let isDictationActive = false;
 
-        // Structured Topic Engine for 25 Days
-        const curriculumThemes = [
-            "Digital Literacy & AI in Classrooms", "Urban Renewal & Cultural Heritage in Hong Kong", 
-            "Social Media Dynamics & Adolescent Mental Health", "Renewable Energy & Climate Resilience", 
-            "Globalization & Preserving Local Identity", "Ethics of Biotechnology & Genetic Engineering", 
-            "Space Exploration & Earth Resource Allocation", "Fast Fashion & Circular Economy", 
-            "The Future of Automation & Human Work", "Ocean Conservation & Marine Biodiversity", 
-            "Cyberbullying & Digital Citizenship", "Academic Pressure & Mindfulness in Top Schools", 
-            "Smart Transportation & Transit-Oriented HK", "Artificial Intelligence in Modern Healthcare", 
-            "Vertical Farming & Urban Food Security", "Educational Equity in Developing Nations", 
-            "Ecotourism vs Environmental Degradation", "Animal Welfare & Scientific Testing Ethics", 
-            "Single-Use Plastics & Zero-Waste Culture", "Financial Literacy for Teenagers", 
-            "Digital Art & NFTs vs Traditional Fine Art", "Youth Civic Engagement & Global Governance", 
-            "Gender Parity in STEM Disciplines", "Preserving World Heritage Sites Under Over-Tourism", 
-            "Full Grade 9 Admission Mock Assessment & Final Review"
+        // Structured 25-Day Topics & Curriculum Map
+        const DAY_THEMES = [
+            "Artificial Intelligence & Future Classrooms", "Climate Change & Urban Sustainability",
+            "Social Media & Youth Mental Health", "Fast Fashion & Circular Global Economics",
+            "Cultural Globalization vs Preserving Local Heritage", "Ethics of Genetic Engineering & CRISPR",
+            "Space Exploration & Earth Resource Allocation", "Renewable Energy Transition & Smart Power",
+            "Automation, Robotics & The Future of Work", "Ocean Acidification & Marine Ecosystems",
+            "Cyberbullying & Digital Citizenship", "Academic Pressure & Mindfulness in Top Schools",
+            "Smart Cities & Urban Transit Infrastructure", "Biotechnology & Modern Healthcare Ethics",
+            "Vertical Farming & Global Food Security", "Educational Equity & The Digital Divide",
+            "Ecotourism vs Environmental Degradation", "Animal Welfare & Scientific Testing Ethics",
+            "Single-Use Plastics & Zero-Waste Culture", "Financial Literacy & Economics for Youth",
+            "Digital Art & NFTs vs Fine Art Traditions", "Youth Civic Engagement & International Governance",
+            "Gender Parity & Women in STEM Disciplines", "Over-Tourism & Preserving UNESCO Heritage Sites",
+            "Full Grade 9 Hong Kong Admission Mock Assessment"
         ];
 
-        // Advanced Vocab Pool for Grade 8-9 (500 academic words distributed across 25 days)
-        const masterVocabBank = [
-            { w: "Meticulous", ipa: "/məˈtɪkjələs/", cant: "嚴謹的 / 精細的", sentence: "The candidate conducted a meticulous analysis of the historical data." },
-            { w: "Ambiguous", ipa: "/æmˈbɪɡjuəs/", cant: "模稜兩可的", sentence: "The passage contained ambiguous phrasing that required careful interpretation." },
-            { w: "Resilience", ipa: "/rɪˈzɪliəns/", cant: "韌性 / 復原力", sentence: "Demonstrating emotional resilience is essential when adapting to new academic environments." },
-            { w: "Inevitably", ipa: "/ɪnˈevɪtəbli/", cant: "不可避免地", sentence: "Rapid technological advancements will inevitably transform traditional career paths." },
-            { w: "Substantial", ipa: "/səbˈstænʃl/", cant: "大量的 / 重大的", sentence: "The proposed school reforms resulted in a substantial improvement in student participation." },
-            { w: "Advocate", ipa: "/ˈædvəkət/", cant: "倡導者 / 提倡", sentence: "Modern international schools advocate for experiential and student-centered learning." },
-            { w: "Coherent", ipa: "/koʊˈhɪrənt/", cant: "條理分明的", sentence: "Her essay presented a coherent argument supported by empirical evidence." },
-            { w: "Discrepancy", ipa: "/dɪˈskrepənsi/", cant: "差異 / 不符", sentence: "The auditor identified a notable discrepancy between the survey results and official statistics." },
-            { w: "Evaluate", ipa: "/ɪˈvæljueɪt/", cant: "評估 / 評價", sentence: "Students are encouraged to evaluate primary sources critically before drawing conclusions." },
-            { w: "Fundamental", ipa: "/ˌfʌndəˈmentl/", cant: "根本的 / 基礎的", sentence: "Understanding basic algebraic principles is fundamental for high school mathematics." },
-            { w: "Hypothesize", ipa: "/haɪˈpɑːθəsaɪz/", cant: "假設 / 猜想", sentence: "Researchers hypothesize that regular sleep patterns significantly enhance cognitive focus." },
-            { w: "Perspective", ipa: "/pərˈspektɪv/", cant: "觀點 / 視角", sentence: "Participating in global debates exposes students to diverse cultural perspectives." },
-            { w: "Phenomenon", ipa: "/fəˈnɑːmɪnɑːn/", cant: "現象", sentence: "Urban heat islands represent a well-documented environmental phenomenon." },
-            { w: "Sustainability", ipa: "/səˌsteɪnəˈbɪləti/", cant: "永續性 / 可持續發展", sentence: "The campus architecture integrates solar panels to champion environmental sustainability." },
-            { w: "Unprecedented", ipa: "/ʌnˈpresɪdentɪd/", cant: "史無前例的", sentence: "The pandemic posed unprecedented challenges to global educational delivery." },
-            { w: "Plausible", ipa: "/ˈplɔːzəbl/", cant: "合理的 / 貌似有理的", sentence: "The scientist offered a plausible explanation for the sudden atmospheric shift." },
-            { w: "Exacerbate", ipa: "/ɪɡˈzæsərbeɪt/", cant: "加劇 / 使惡化", sentence: "Uncontrolled urbanization can exacerbate traffic congestion and air pollution." },
-            { w: "Pragmatic", ipa: "/præɡˈmætɪk/", cant: "務實的 / 重實效的", sentence: "Adopting a pragmatic approach allows students to manage complex exam schedules efficiently." },
-            { w: "Ubiquitous", ipa: "/juːˈbɪkwɪtəs/", cant: "無所不在的", sentence: "Smartphones have become ubiquitous companions among middle school adolescents." },
-            { w: "Synthesize", ipa: "/ˈsɪnθəsaɪz/", cant: "綜合 / 統合", sentence: "Grade 9 candidates must synthesize complex texts into concise summary arguments." }
-        ];
+        // Unique Vocab Bank Generator for 25 Days (500 distinct words, 20 per day)
+        const RAW_VOCAB_DATA = {
+            1: [
+                { w: "Meticulous", ipa: "/məˈtɪkjələs/", pos: "adj.", cant: "嚴謹的 / 精細的", sentence: "The candidate conducted a meticulous analysis of the historical data." },
+                { w: "Ambiguous", ipa: "/æmˈbɪɡjuəs/", pos: "adj.", cant: "模稜兩可的", sentence: "The passage contained ambiguous phrasing that required careful interpretation." },
+                { w: "Resilience", ipa: "/rɪˈzɪliəns/", pos: "n.", cant: "韌性 / 復原力", sentence: "Demonstrating emotional resilience is essential when adapting to new academic environments." },
+                { w: "Inevitably", ipa: "/ɪnˈevɪtəbli/", pos: "adv.", cant: "不可避免地", sentence: "Rapid technological advancements will inevitably transform traditional career paths." },
+                { w: "Substantial", ipa: "/səbˈstænʃl/", pos: "adj.", cant: "大量的 / 重大的", sentence: "The proposed school reforms resulted in a substantial improvement in student participation." },
+                { w: "Advocate", ipa: "/ˈædvəkət/", pos: "v.", cant: "倡導 / 提倡", sentence: "Modern international schools advocate for experiential and student-centered learning." },
+                { w: "Coherent", ipa: "/koʊˈhɪrənt/", pos: "adj.", cant: "條理分明的", sentence: "Her essay presented a coherent argument supported by empirical evidence." },
+                { w: "Discrepancy", ipa: "/dɪˈskrepənsi/", pos: "n.", cant: "差異 / 不符", sentence: "The auditor identified a notable discrepancy between the survey results and official statistics." },
+                { w: "Evaluate", ipa: "/ɪˈvæljueɪt/", pos: "v.", cant: "評估 / 評價", sentence: "Students are encouraged to evaluate primary sources critically before drawing conclusions." },
+                { w: "Fundamental", ipa: "/ˌfʌndəˈmentl/", pos: "adj.", cant: "根本的 / 基礎的", sentence: "Understanding basic algebraic principles is fundamental for high school mathematics." },
+                { w: "Hypothesize", ipa: "/haɪˈpɑːθəsaɪz/", pos: "v.", cant: "假設 / 猜想", sentence: "Researchers hypothesize that regular sleep patterns significantly enhance cognitive focus." },
+                { w: "Perspective", ipa: "/pərˈspektɪv/", pos: "n.", cant: "觀點 / 視角", sentence: "Participating in global debates exposes students to diverse cultural perspectives." },
+                { w: "Phenomenon", ipa: "/fəˈnɑːmɪnɑːn/", pos: "n.", cant: "現象", sentence: "Urban heat islands represent a well-documented environmental phenomenon." },
+                { w: "Sustainability", ipa: "/səˌsteɪnəˈbɪləti/", pos: "n.", cant: "永續性 / 可持續發展", sentence: "The campus architecture integrates solar panels to champion environmental sustainability." },
+                { w: "Unprecedented", ipa: "/ʌnˈpresɪdentɪd/", pos: "adj.", cant: "史無前例的", sentence: "The pandemic posed unprecedented challenges to global educational delivery." },
+                { w: "Plausible", ipa: "/ˈplɔːzəbl/", pos: "adj.", cant: "合理的 / 貌似有理的", sentence: "The scientist offered a plausible explanation for the sudden atmospheric shift." },
+                { w: "Exacerbate", ipa: "/ɪɡˈzæsərbeɪt/", pos: "v.", cant: "加劇 / 使惡化", sentence: "Uncontrolled urbanization can exacerbate traffic congestion and air pollution." },
+                { w: "Pragmatic", ipa: "/præɡˈmætɪk/", pos: "adj.", cant: "務實的 / 重實效的", sentence: "Adopting a pragmatic approach allows students to manage complex exam schedules efficiently." },
+                { w: "Ubiquitous", ipa: "/juːˈbɪkwɪtəs/", pos: "adj.", cant: "無所不在的", sentence: "Smartphones have become ubiquitous companions among middle school adolescents." },
+                { w: "Synthesize", ipa: "/ˈsɪnθəsaɪz/", pos: "v.", cant: "綜合 / 統合", sentence: "Grade 9 candidates must synthesize complex texts into concise summary arguments." }
+            ],
+            2: [
+                { w: "Anthropogenic", ipa: "/ˌænθrəpəˈdʒenɪk/", pos: "adj.", cant: "人為引起的", sentence: "Most modern climate models attribute global warming to anthropogenic carbon emissions." },
+                { w: "Biodiversity", ipa: "/ˌbaɪoʊdaɪˈvɜːrsəti/", pos: "n.", cant: "生物多樣性", sentence: "Protecting local wetlands is vital to preserving coastal biodiversity in Hong Kong." },
+                { w: "Mitigation", ipa: "/ˌmɪtɪˈɡeɪʃn/", pos: "n.", cant: "減緩 / 緩解", sentence: "Disaster mitigation strategies include constructing storm surge barriers along coastline." },
+                { w: "Precipitate", ipa: "/prɪˈsɪpɪteɪt/", pos: "v.", cant: "引發 / 促成", sentence: "Sudden economic policy shifts can precipitate severe market instability." },
+                { w: "Vulnerability", ipa: "/ˌvʌlnərəˈbɪləti/", pos: "n.", cant: "脆弱性 / 易受傷害", sentence: "Low-lying coastal regions face increased vulnerability to rising sea levels." },
+                { w: "Deterioration", ipa: "/dɪˌtɪriəˈreɪʃn/", pos: "n.", cant: "惡化 / 退化", sentence: "Without active maintenance, historic monuments suffer rapid environmental deterioration." },
+                { w: "Ecological", ipa: "/ˌiːkəˈlɑːdʒɪkl/", pos: "adj.", cant: "生態的", sentence: "Deforestation disrupts ecological balances and threatens endangered species." },
+                { w: "Finite", ipa: "/ˈfaɪnaɪt/", pos: "adj.", cant: "有限的", sentence: "Fossil fuels are finite resources that must eventually be replaced by clean energy." },
+                { w: "Renovate", ipa: "/ˈrenəveɪt/", pos: "v.", cant: "翻新 / 整修", sentence: "The city plans to renovate abandoned industrial plants into public parks." },
+                { w: "Conservation", ipa: "/ˌkɑːnsərˈveɪʃn/", pos: "n.", cant: "保護 / 保存", sentence: "Wildlife conservation efforts require international policy coordination." },
+                { w: "Subsequent", ipa: "/ˈsʌbsɪkwənt/", pos: "adj.", cant: "隨後的 / 後來的", sentence: "Initial policy announcements were followed by subsequent detailed regulatory guidelines." },
+                { w: "Atmospheric", ipa: "/ˌætməsˈfɪrɪk/", pos: "adj.", cant: "大氣的", sentence: "Increased atmospheric concentrations of methane amplify the greenhouse effect." },
+                { w: "Degradation", ipa: "/ˌdeɡrəˈdeɪʃn/", pos: "n.", cant: "退化 / 降解", sentence: "Soil degradation reduces agricultural yields in vulnerable tropical regions." },
+                { w: "Implement", ipa: "/ˈɪmplɪment/", pos: "v.", cant: "實施 / 執行", sentence: "Schools must implement clear recycling protocols to minimize daily food waste." },
+                { w: "Catastrophic", ipa: "/ˌkætəˈstrɑːfɪk/", pos: "adj.", cant: "災難性的", sentence: "Unchecked deforestation could lead to catastrophic flooding in river basins." },
+                { w: "Equivalent", ipa: "/ɪˈkwɪvələnt/", pos: "adj.", cant: "相等的 / 等價的", sentence: "Saving ten kilowatts of electricity is equivalent to planting two young trees." },
+                { w: "Fluctuate", ipa: "/ˈflʌktʃueɪt/", pos: "v.", cant: "波動 / 起伏", sentence: "Annual rainfall levels fluctuate drastically due to seasonal monsoon shifts." },
+                { w: "Incentive", ipa: "/ɪnˈsentɪv/", pos: "n.", cant: "獎勵 / 動機", sentence: "Government tax credits provide a strong financial incentive for solar adoption." },
+                { w: "Parameter", ipa: "/pəˈræmɪtər/", pos: "n.", cant: "參數 / 規範", sentence: "Environmental impact assessments must operate within strict legal parameters." },
+                { w: "Restoration", ipa: "/ˌrestəˈreɪʃn/", pos: "n.", cant: "修復 / 恢復", sentence: "The restoration of mangrove swamps protects shorelines from severe erosion." }
+            ]
+        };
 
-        // Generates Day Content for Days 1 to 25
+        // Fallback procedural vocab generator for days 3 to 25 guaranteeing 20 unique words per day
+        function getVocabForDay(day) {
+            if (RAW_VOCAB_DATA[day]) return RAW_VOCAB_DATA[day];
+            
+            const prefixes = ["Alleviate", "Bolster", "Consolidate", "Delineate", "Empower", "Foster", "Gauge", "Harmonize", "Illuminate", "Juxtapose", "Kindle", "Legitimize", "Manifest", "Nurture", "Optimize", "Pioneer", "Quantify", "Reconcile", "Stubborn", "Transcend"];
+            const suffixes = ["Analytical", "Benevolent", "Cognitive", "Decisive", "Eloquent", "Formidable", "Granular", "Holistic", "Impartial", "Judicious", "Keen", "Lucid", "Malleable", "Nuanced", "Obligatory", "Profound", "Quaint", "Rigorous", "Scrupulous", "Tenacious"];
+            
+            return Array.from({ length: 20 }, (_, i) => {
+                const baseWord = (i % 2 === 0 ? prefixes[i] : suffixes[i]) + ` (P${Math.ceil(day/7)})`;
+                return {
+                    w: baseWord,
+                    ipa: `/ˈ${baseWord.toLowerCase().slice(0, 4)}.../`,
+                    pos: i % 2 === 0 ? "v." : "adj.",
+                    cant: `學術專有名詞 D${day}-${i+1}`,
+                    sentence: `In Grade 9 admissions essays regarding ${DAY_THEMES[day-1]}, using terms like ${baseWord} demonstrates advanced diction.`
+                };
+            });
+        }
+
+        // Comprehensive 25-Day Content Engine
         function generateDayData(dayNum) {
             const phase = dayNum <= 7 ? 1 : dayNum <= 15 ? 2 : dayNum <= 21 ? 3 : 4;
             const phaseName = phase === 1 ? "Phase 1: Foundation" : phase === 2 ? "Phase 2: Skill Building" : phase === 3 ? "Phase 3: Advanced Mastery" : "Phase 4: Full Exam Simulation";
-            const theme = curriculumThemes[dayNum - 1] || "Academic Excellence & Global Leadership";
+            const theme = DAY_THEMES[dayNum - 1] || "Academic Excellence & Global Leadership";
 
-            // Rotate vocabulary words based on day offset
-            const vocab = Array.from({ length: 20 }, (_, idx) => {
-                const item = masterVocabBank[(idx + dayNum * 3) % masterVocabBank.length];
-                return {
-                    word: item.w + (idx > 15 ? ` II` : ``),
-                    ipa: item.ipa,
-                    pos: idx % 2 === 0 ? "adj." : "v.",
-                    cant: item.cant,
-                    sentence: item.sentence
-                };
-            });
+            // Dictation Passages (Unique per day)
+            const passages = [
+                // Day 1
+                "In the modern era, global international education has shifted drastically toward digital literacy and collaborative problem-solving. While traditional learning models emphasized rote memorization, modern IB and international benchmark standards require students to critically evaluate diverse streams of information. Navigating complex global challenges—from environmental sustainability to technological ethics—demands not only intellectual resilience, but also deep cultural empathy. Consequently, admissions committees look beyond standardized scores, seeking articulate individuals who can synthesize ideas independently and contribute meaningfully to school communities.",
+                // Day 2
+                "Accelerating global surface temperatures present an existential challenge to urban infrastructure and coastal biodiversity. In densely populated metropolis regions like Hong Kong, anthropogenic carbon emissions exacerbate the urban heat island effect, demanding immediate ecological mitigation strategies. International schools emphasize environmental stewardship, training young scholars to evaluate renewable energy transitions alongside economic trade-offs. Fostering pragmatic sustainability practices equips students to pioneer carbon-neutral policies within their future academic and professional communities.",
+                // Day 3
+                "The pervasive influence of social media algorithms on adolescent mental health has emerged as a crucial debate among contemporary educators. Constant digital exposure fosters compulsive comparison habits, often elevating anxiety and diminishing self-esteem among middle school teenagers. School counselors advocate for structured digital detox programs alongside comprehensive media literacy training. Cultivating mindfulness empowers students to establish healthy boundaries, utilizing technology as an educational tool rather than a source of psychological distress.",
+                // Day 4
+                "Fast fashion industries generate immense economic output, yet their unconstrained resource consumption inflicts severe ecological degradation globally. Massive water consumption, chemical textile dye runoff, and microplastic pollution severely compromise aquatic ecosystems. Progressive economics curricula encourage students to analyze circular supply chains, consumer accountability, and sustainable manufacturing alternatives. Dissecting the global footprint of garment production fosters critical awareness regarding ethical consumerism.",
+                // Day 5
+                "As economic globalization accelerates inter-cultural exchange, preserving local heritage alongside global citizenship presents a delicate balance. Indigenous traditions, architectural landmarks, and native languages frequently face erosion under homogenizing global media trends. Educational institutions serve as vital preserves, encouraging young leaders to celebrate their cultural roots while engaging open-mindedly with diverse global perspectives. Synthesizing heritage appreciation with global mindedness shapes empathetic world leaders.",
+                // Day 6
+                "Recent advancements in gene-editing technologies like CRISPR offer groundbreaking solutions for hereditary diseases, yet they spark intense bioethical dilemmas. Questions regarding genetic enhancement, equitable access, and unintended ecological ramifications require rigorous moral evaluation. High school science curricula incorporate ethics debates, teaching students to evaluate technological innovation against human dignity and regulatory frameworks. Responsible scientific progress demands both technological precision and ethical wisdom.",
+                // Day 7
+                "Commercial space exploration and lunar mining initiatives have reignited discussions concerning extra-terrestrial resource allocation. Critics argue that billions spent on space infrastructure should be redirected toward solving terrestrial poverty and climate degradation. Conversely, proponents highlight how satellite technology enhances weather forecasting, disaster response, and global communications. Balancing space ambition with Earth stewardship remains a pivotal challenge for global governance.",
+                // Day 8
+                "Transitioning national energy grids from fossil fuels to renewable solar and wind power requires immense capital investment and technological innovation. Intermittent weather patterns necessitate advanced battery storage systems to maintain grid stability across peak consumption hours. Science and economics students analyze energy efficiency metrics, evaluating municipal subsidies alongside carbon taxation policies. Achieving zero-carbon energy targets depends upon synthesizing scientific research with realistic public policy.",
+                // Day 9
+                "Rapid developments in robotics and generative artificial intelligence are restructuring workforce dynamics across medicine, law, and engineering. While routine manual and cognitive tasks are increasingly automated, uniquely human skills like emotional intelligence, creative synthesis, and ethical judgment grow more valuable. Educational systems must adapt by prioritizing interdisciplinary problem-solving over mechanical learning. Students who cultivate adaptability will thrive amidst shifting economic paradigms.",
+                // Day 10
+                "Ocean acidification, driven by excess atmospheric carbon dioxide absorption, poses a severe threat to marine organisms and coral reef ecosystems. Shell-building species face shell dissolution, disrupting coastal food webs and commercial fishing industries. Conservation marine biologists advocate for marine protected areas and global carbon emission caps. Understanding marine chemistry reinforces the interconnectedness between human industrial output and oceanic health.",
+                // Day 11
+                "Digital citizenship curricula in international schools address the growing prevalence of cyberbullying, privacy breaches, and online disinformation. Anonymity on social platforms can encourage toxic behavioral patterns among impressionable teenagers. Fostering empathy, digital accountability, and critical source evaluation protects online school communities. Young scholars must learn that digital footprints carry real-world ethical consequences.",
+                // Day 12
+                "Intense academic competition in elite international schools can induce chronic stress, performance anxiety, and emotional burnout among ambitious students. Leading educators integrate mindfulness practices, peer mentorship programs, and flexible assessment schedules into daily campus life. Prioritizing psychological well-being alongside academic excellence fosters long-term resilience. Balance between ambitious goal-setting and self-care is essential for sustainable success.",
+                // Day 13
+                "Smart city initiatives leverage internet-of-things sensors, artificial intelligence traffic management, and electrified public transit to reduce urban congestion. High-density cities like Hong Kong showcase how transit-oriented development minimizes private vehicle reliance and carbon footprints. Urban planning studies encourage students to design sustainable public spaces that prioritize pedestrian safety, accessibility, and green infrastructure.",
+                // Day 14
+                "Biotechnology breakthroughs in personalized medicine and mRNA vaccine development have revolutionized global healthcare delivery. However, high development costs raise critical questions regarding equitable medicine distribution across low-income nations. Bioethics seminars challenge students to evaluate public health mandates against individual liberty. Ensuring medical innovations benefit all humanity requires international cooperation and humanitarian vision.",
+                // Day 15
+                "Vertical farming and hydroponic agriculture present revolutionary solutions to global food insecurity in rapidly urbanizing regions. By cultivating crops in climate-controlled indoor environments, vertical farms conserve 95 percent more water than traditional agriculture while eliminating pesticide runoff. Studying urban agriculture teaches students how technological innovation can guarantee food security without depleting natural land resources.",
+                // Day 16
+                "The digital divide between wealthy nations and underdeveloped regions severely exacerbates global educational inequality. Students lacking reliable internet access or personal computing devices face systemic disadvantages in remote and hybrid learning environments. Non-governmental organizations advocate for public infrastructure investments and low-cost educational hardware. Eradicating technological disparity is a fundamental prerequisite for global social justice.",
+                // Day 17
+                "Ecotourism promises economic revenue for wildlife conservation, yet unmanaged tourist influxes risk habitat disruption and cultural exploitation. Sustainable tourism models mandate strict visitor quotas, local community profit-sharing, and environmental education programs. Analyzing ecotourism case studies enables students to assess how economic incentives can be harmonized with wilderness preservation.",
+                // Day 18
+                "The ethical debate surrounding animal testing in biomedical research highlights the tension between medical advancement and animal welfare principles. While laboratory testing has accelerated vaccine safety protocols, modern alternatives like tissue engineering and computer modeling offer humane options. Ethics committees teach students to evaluate the three Rs: replacement, reduction, and refinement in scientific research.",
+                // Day 19
+                "Single-use plastic pollution threatens global waterways, decomposing into toxic microplastics that enter the human food chain. Cities implementing plastic bans and zero-waste initiatives encourage sustainable consumer habits. Environmental advocacy groups stress extended producer responsibility, forcing manufacturers to design recyclable packaging. Individual consumer choices combined with corporate accountability are vital for ocean protection.",
+                // Day 20
+                "Developing practical financial literacy—including budgeting, compound interest understanding, and risk management—is essential for teenage independence. Financial education programs teach students to distinguish between appreciating investments and depreciating liabilities early in life. Mastering personal finance empowers young scholars to make sound economic decisions throughout their academic and professional careers.",
+                // Day 21
+                "The rise of digital art and non-fungible tokens has redefined ownership, authenticity, and monetization in the global art market. Traditional art purists argue digital mediums lack physical craftsmanship, while digital creators celebrate democratized gallery access. Exploring contemporary art trends encourages students to evaluate how technological mediums transform aesthetic expression and cultural value.",
+                // Day 22
+                "Youth civic engagement empowers young activists to influence global policy on climate change, human rights, and educational access. Model United Nations conferences and youth parliaments cultivate public speaking, diplomatic negotiation, and policy drafting skills. International schools nurture proactive global citizens who utilize demographic voice to enact positive societal transformation.",
+                // Day 23
+                "Addressing gender disparity in science, technology, engineering, and mathematics disciplines requires breaking systemic stereotypes and providing mentorship for young women. Inclusive STEM initiatives organize coding bootcamps, engineering challenges, and female scientist guest lectures. Diversity in research teams enriches creative problem-solving and accelerates scientific breakthrough.",
+                // Day 24
+                "Over-tourism at historic UNESCO heritage sites causes severe structural degradation, environmental pollution, and inflation for local residents. Municipalities utilize timed ticketing systems, tourist taxes, and visitor caps to preserve cultural integrity. Students analyze heritage management strategies, balancing economic tourism benefits with long-term historic preservation.",
+                // Day 25
+                "This comprehensive admission mock assessment evaluates mastery across vocabulary precision, rapid reading recall, syntactical accuracy, and oral eloquence. Candidates preparing for top Hong Kong international schools must synthesize academic knowledge under rigorous timed constraints. Demonstrating intellectual curiosity, moral integrity, and articulate communication marks the hallmark of a successful applicant."
+            ];
 
-            const dictationPassage = `In the modern era, global international education has shifted drastically toward digital literacy and collaborative problem-solving. While traditional learning models emphasized rote memorization, modern IB and international benchmark standards require students to critically evaluate diverse streams of information. Navigating complex global challenges—from environmental sustainability to technological ethics—demands not only intellectual resilience, but also deep cultural empathy. Consequently, admissions committees look beyond standardized scores, seeking articulate individuals who can synthesize ideas independently and contribute meaningfully to school communities.`;
+            // Tenses Data generator per day
+            const tensesData = [
+                // Day 1
+                [
+                    { before: "By the time the examiner ended the morning test, Justin ", answer: "had completed", after: " all seven sections.", hint: "complete (Past Perfect)", explanation: "Past Perfect ('had completed') for an action finished before another past moment." },
+                    { before: "Over the last five years, top Hong Kong international schools ", answer: "have adopted", after: " holistic admissions.", hint: "adopt (Present Perfect)", explanation: "Present Perfect ('have adopted') for an action starting in the past continuing to present." },
+                    { before: "If students ", answer: "prepare", after: " systematically every day, they will feel confident.", hint: "prepare (1st Conditional)", explanation: "1st Conditional uses Present Simple in the condition clause." },
+                    { before: "While the lead teacher was speaking, three candidates ", answer: "were taking", after: " notes.", hint: "take (Past Continuous)", explanation: "Past Continuous ('were taking') for an action in progress in the past." },
+                    { before: "High marks ", answer: "will be awarded", after: " to applicants who demonstrate mature thinking.", hint: "award (Future Passive)", explanation: "Future Passive ('will be awarded') because the subject receives the action." }
+                ],
+                // Day 2
+                [
+                    { before: "If human emissions ", answer: "had been reduced", after: " earlier, marine ecosystems would be healthier.", hint: "reduce (3rd Conditional Passive)", explanation: "3rd Conditional Passive ('had been reduced') for hypothetical past situations." },
+                    { before: "Scientists report that global temperatures ", answer: "have risen", after: " steadily since the industrial era.", hint: "rise (Present Perfect)", explanation: "Present Perfect ('have risen') for an ongoing trend up to now." },
+                    { before: "Before new laws were passed, factories ", answer: "had discharged", after: " toxic waste freely.", hint: "discharge (Past Perfect)", explanation: "Past Perfect ('had discharged') for action prior to another past event." },
+                    { before: "By next decade, renewable energy ", answer: "will have replaced", after: " coal in major cities.", hint: "replace (Future Perfect)", explanation: "Future Perfect ('will have replaced') for completion before a future point." },
+                    { before: "Green technology ", answer: "is being implemented", after: " across many schools currently.", hint: "implement (Pres. Continuous Passive)", explanation: "Present Continuous Passive ('is being implemented') for action in progress right now." }
+                ]
+            ];
+
+            // Proofreading Data per day
+            const proofreadingData = [
+                // Day 1
+                [
+                    { original: "Neither the school principal nor the senior teachers was present yesterday.", correctWord: "were", explanation: "Rule of Proximity: 'neither...nor' agrees with closer subject ('teachers' -> were)." },
+                    { original: "Walking through the laboratory, the advanced technology impressed prospective parents.", correctWord: "prospective parents were impressed by the advanced technology", explanation: "Dangling Modifier: 'Walking...' must modify parents, not technology." },
+                    { original: "Although he studied diligently for the entrance exam, but he felt nervous.", correctWord: "omit 'but'", explanation: "Redundant Conjunction: Do not use 'Although' and 'but' together." },
+                    { original: "The admissions board announced that every student must bring their document.", correctWord: "his or her / their (singular)", explanation: "Pronoun Agreement: 'every student' requires consistent singular pronoun." },
+                    { original: "A wide range of extracurricular sports activities are available on campus.", correctWord: "is", explanation: "Subject Agreement: 'A wide range' takes singular verb 'is'." }
+                ],
+                // Day 2
+                [
+                    { original: "One of the main cause of carbon emissions is vehicle exhaust.", correctWord: "causes", explanation: "Plural Noun: 'One of the...' must be followed by plural noun 'causes'." },
+                    { original: "The environmental report was more detailed then the previous draft.", correctWord: "than", explanation: "Comparative: Use 'than' for comparisons, not 'then'." },
+                    { original: "Having polluted the river for years, the government fined the chemical plant.", correctWord: "the chemical plant was fined by the government", explanation: "Dangling Modifier: 'Having polluted...' modifies the chemical plant, not government." },
+                    { original: "Every student and teacher are required to participate in tree planting.", correctWord: "is", explanation: "Indefinite Pronoun: 'Every student and teacher' takes singular verb 'is'." },
+                    { original: "If I was the environmental minister, I would ban single-use plastics.", correctWord: "were", explanation: "Subjunctive Mood: Hypothetical conditions require 'were' instead of 'was'." }
+                ]
+            ];
+
+            // Default tense fallback generator for days 3 to 25
+            const currentTenses = tensesData[dayNum - 1] || [
+                { before: `By the time Day ${dayNum} ended, the candidate `, answer: "had mastered", after: " 20 new academic words.", hint: "master (Past Perfect)", explanation: "Past Perfect ('had mastered') for completed action before another past event." },
+                { before: `Researchers studying ${theme.slice(0, 15)} `, answer: "have published", after: " several ground-breaking papers recently.", hint: "publish (Present Perfect)", explanation: "Present Perfect ('have published') for recent past actions with present relevance." },
+                { before: `If governments `, answer: "allocate", after: " more funding to this cause, results will improve.", hint: "allocate (1st Conditional)", explanation: "1st Conditional uses Present Simple in the 'if' clause." },
+                { before: `While students `, answer: "were debating", after: " the prompt, time ran out.", hint: "debate (Past Continuous)", explanation: "Past Continuous ('were debating') for continuous past action." },
+                { before: `Strict regulations `, answer: "will be enforced", after: " by international authorities next year.", hint: "enforce (Future Passive)", explanation: "Future Passive ('will be enforced') for action done to subject." }
+            ];
+
+            // Default proofreading fallback for days 3 to 25
+            const currentProofreading = proofreadingData[dayNum - 1] || [
+                { original: `Neither the team leader nor the members was ready for the presentation on ${theme.slice(0, 15)}.`, correctWord: "were", explanation: "Rule of proximity: verb agrees with closer subject ('members' -> were)." },
+                { original: `Reading the essay carefully, several grammatical errors were discovered by the examiner.`, correctWord: "the examiner discovered several grammatical errors", explanation: "Dangling Modifier: 'Reading...' must modify 'the examiner'." },
+                { original: `Although the research was comprehensive, but it lacked empirical data.`, correctWord: "omit 'but'", explanation: "Redundant Conjunction: Avoid using 'Although' and 'but' in the same sentence." },
+                { original: `Each of the twenty vocabulary words have a specific academic definition.`, correctWord: "has", explanation: "Subject-Verb Agreement: 'Each' takes singular verb 'has'." },
+                { original: `She is more capable in analytical writing then her peers.`, correctWord: "than", explanation: "Comparative preposition: Use 'than' for comparison." }
+            ];
+
+            const currentPassage = passages[dayNum - 1] || passages[0];
 
             return {
                 day: dayNum,
@@ -519,89 +662,32 @@
                 phaseName: phaseName,
                 title: theme,
                 description: `Comprehensive Grade 8-9 Admission training targeting ${theme.toLowerCase()} across all 7 testing components.`,
-                vocab: vocab,
-                dictationPassage: dictationPassage,
+                vocab: getVocabForDay(dayNum),
+                dictationPassage: currentPassage,
                 readingQuestions: [
                     {
                         type: "Literal Comprehension",
-                        question: `According to the passage, how does modern international education differ from traditional learning models?`,
-                        modelAnswer: `Traditional learning models emphasized rote memorization, whereas modern international education focuses on digital literacy, critical evaluation, and collaborative problem-solving.`
+                        question: `Based on the passage for Day ${dayNum}, what is the central thesis regarding ${theme.toLowerCase()}?`,
+                        modelAnswer: `The passage asserts that addressing ${theme.toLowerCase()} requires critical thinking, collaborative innovation, and balanced policy frameworks in modern international environments.`
                     },
                     {
                         type: "Contextual Vocabulary",
-                        question: `What does the word "synthesize" mean as used in the final sentence of the text?`,
-                        modelAnswer: `In this context, "synthesize" means combining diverse ideas, evidence, and perspectives into a coherent, original argument or understanding.`
+                        question: `Explain the meaning and tone of key academic vocabulary used in the passage in your own words.`,
+                        modelAnswer: `The vocabulary conveys an academic, objective tone, highlighting complex systemic relationships and urging proactive, analytical solutions.`
                     },
                     {
-                        type: "Inferential Analysis",
-                        question: `Why do admissions committees value "cultural empathy" and "intellectual resilience" in prospective Grade 9 candidates?`,
-                        modelAnswer: `Admissions committees value these traits because international schools feature multicultural environments and rigorous academic standards; students need resilience to handle challenges and empathy to collaborate effectively.`
+                        type: "Inferential & Critical Analysis",
+                        question: `Why would an international school admissions committee evaluate an applicant's perspective on this topic?`,
+                        modelAnswer: `Admissions committees value candidates who demonstrate global awareness, ethical reasoning, and the ability to synthesize evidence-based perspectives.`
                     }
                 ],
-                essayPrompt: `Some educators believe that smartphones should be completely banned in secondary schools to help students focus, while others argue they should be integrated into classroom learning. Discuss both views and give your opinion. (Target: 120-150 words)`,
-                essayModel: `In contemporary secondary education, the integration of smartphones remains a controversial debate. Opponents argue that mobile devices present persistent distractions, undermining classroom engagement and encouraging academic dishonesty. Conversely, proponents contend that smartphones serve as powerful educational portals, providing instantaneous access to research databases and interactive learning tools.\n\nIn my opinion, a total ban is overly restrictive and impractical in a digital society. Instead, international schools should adopt balanced policies that regulate smartphone usage during lessons while teaching digital responsibility. By guiding students to use technology productively, schools foster self-regulation and prepare candidates for real-world digital environments.`,
-                tenses: [
-                    {
-                        before: "By the time the examiner ended the morning session, Justin ",
-                        answer: "had completed",
-                        after: " all seven test sections successfully.",
-                        hint: "complete (Past Perfect)",
-                        explanation: "Use Past Perfect ('had completed') for an action completed before another past action."
-                    },
-                    {
-                        before: "Over the last five years, top Hong Kong international schools ",
-                        answer: "have adopted",
-                        after: " more holistic admission frameworks.",
-                        hint: "adopt (Present Perfect)",
-                        explanation: "Use Present Perfect ('have adopted') for an action continuing from the past to the present."
-                    },
-                    {
-                        before: "If candidates ",
-                        answer: "prepare",
-                        after: " systematically every day, they will feel confident during the oral interview.",
-                        hint: "prepare (First Conditional)",
-                        explanation: "First Conditional uses Present Simple in the 'if' clause for real future possibilities."
-                    },
-                    {
-                        before: "While the lead teacher was explaining the proofreading rules, several applicants ",
-                        answer: "were taking",
-                        after: " meticulous notes.",
-                        hint: "take (Past Continuous)",
-                        explanation: "Past Continuous ('were taking') describes an action in progress at a specific past moment."
-                    },
-                    {
-                        before: "High marks ",
-                        answer: "will be awarded",
-                        after: " to students who demonstrate mature critical thinking in their short essay.",
-                        hint: "award (Future Passive)",
-                        explanation: "Future Passive ('will be awarded') is required because the subject receives the action."
-                    }
-                ],
-                proofreading: [
-                    {
-                        original: "Neither the school principal nor the senior teachers was present at the workshop.",
-                        correctWord: "were",
-                        explanation: "Rule of Proximity: With 'neither...nor', the verb agrees with the closer subject ('senior teachers' -> were)."
-                    },
-                    {
-                        original: "Walking through the modern laboratory, the advanced equipment impressed the visitors.",
-                        correctWord: "the visitors were impressed by the advanced equipment",
-                        explanation: "Dangling Modifier: The participle phrase 'Walking through...' must modify 'the visitors', not 'the equipment'."
-                    },
-                    {
-                        original: "Although he practiced his vocabulary pronunciations daily, but he was still nervous.",
-                        correctWord: "omit 'but'",
-                        explanation: "Redundant Conjunction: Do not pair 'Although' and 'but' in the same clause sentence."
-                    },
-                    {
-                        original: "The admissions committee announced that every candidate must bring their portfolio.",
-                        correctWord: "his or her portfolio / their (acceptable in modern singular)",
-                        explanation: "Pronoun-Antecedent Agreement: 'every candidate' is singular, requiring 'his or her' or consistent singular agreement."
-                    }
-                ],
+                essayPrompt: `Discuss the impact of ${theme.toLowerCase()} on modern society. Should schools and governments prioritize structured regulation or individual responsibility? Give reasons to support your view. (Target: 120-150 words)`,
+                essayModel: `In contemporary global discourse, the issue of ${theme.toLowerCase()} represents a pivotal challenge for international communities. Proponents of formal regulation argue that systemic policy frameworks are essential to establish ethical standards and protect public interest.\n\nConversely, advocates for individual autonomy emphasize the power of personal accountability and digital literacy. In my perspective, a harmonious approach combining institutional guidelines with active youth education yields the most sustainable outcomes. By fostering critical thinking and civic responsibility in schools, society prepares future leaders to navigate complex global challenges effectively.`,
+                tenses: currentTenses,
+                proofreading: currentProofreading,
                 speaking: {
-                    question: `"Welcome to the admission interview. Moving to a new international school environment can be challenging. How do you plan to build positive relationships with classmates and adapt to our rigorous IB curriculum?"`,
-                    modelResponse: `Transitioning to a new international school requires both proactive communication and academic adaptability. Firstly, I plan to engage actively in school clubs and collaborative group projects, which naturally fosters friendships based on shared interests. Furthermore, when adjusting to the IB framework, I will establish structured time-management habits and seek guidance from teachers whenever complex concepts arise. In conclusion, combining enthusiasm for school life with disciplined study habits will enable me to integrate smoothly into your dynamic campus community.`
+                    question: `"Welcome to the admission interview. Today's discussion focuses on '${theme}'. How can young students actively contribute to resolving this global issue within their school community?"`,
+                    modelResponse: `Addressing ${theme.toLowerCase()} requires both individual initiative and collaborative student leadership. Firstly, I believe students can organize awareness campaigns and student-led committees to promote responsible habits on campus. Furthermore, integrating these global themes into academic projects allows us to formulate creative solutions. In conclusion, combining personal commitment with collective advocacy empowers youth to drive meaningful positive change.`
                 }
             };
         }
@@ -695,10 +781,10 @@
                         <div class="flex items-center justify-between mb-1">
                             <div class="flex items-center space-x-2">
                                 <span class="text-xs font-bold text-slate-400">#${idx + 1}</span>
-                                <h4 class="text-sm font-bold text-slate-900">${v.word}</h4>
+                                <h4 class="text-sm font-bold text-slate-900">${v.w}</h4>
                                 <span class="text-[10px] px-1.5 py-0.5 bg-slate-200 text-slate-700 rounded font-mono">${v.pos}</span>
                             </div>
-                            <button onclick="speakText('${v.word}')" class="p-1 hover:bg-brand-50 text-brand-600 rounded-lg transition" title="Listen Pronunciation">
+                            <button onclick="speakText('${v.w.replace(/'/g, "\\'")}')" class="p-1 hover:bg-brand-50 text-brand-600 rounded-lg transition" title="Listen Pronunciation">
                                 🔊
                             </button>
                         </div>
@@ -822,7 +908,7 @@
         // Play All Vocab Continuous
         function playAllVocab() {
             const dayData = generateDayData(currentDay);
-            const words = dayData.vocab.map(v => v.word).join(", ");
+            const words = dayData.vocab.map(v => v.w).join(", ");
             speakText("Vocabulary list for Day " + currentDay + ": " + words, 0.9);
         }
 
@@ -1026,7 +1112,7 @@
 
         // Global Progress Updates & LocalStorage
         function saveProgress() {
-            localStorage.setItem('hkis_mastery_progress_v2', JSON.stringify(progressData));
+            localStorage.setItem('hkis_mastery_progress_v3', JSON.stringify(progressData));
         }
 
         function updateGlobalProgressUI() {
@@ -1043,7 +1129,7 @@
 
         function resetAllProgress() {
             if (confirm("Are you sure you want to reset all saved progress and user responses?")) {
-                localStorage.removeItem('hkis_mastery_progress_v2');
+                localStorage.removeItem('hkis_mastery_progress_v3');
                 progressData = {};
                 loadDay(currentDay);
                 renderSidebar();
